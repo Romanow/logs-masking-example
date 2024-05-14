@@ -33,8 +33,12 @@ $ curl http://localhost:8080/api/v1/send \
 
 $ docker compose logs -f fluent-bit
 
-fluent-bit | [1] tcp.0: {"localTime"= "level"= "text"= "levelInt"= "loggerName"= "threadName"= "appName"= "appType"= >"2024-05-14T20:47:40.589Z", >"INFO", >"Initializing Servlet 'dispatcherServlet'", >6, >"org.springframework.web.servlet.DispatcherServlet", >"http-nio-8080-exec-1", >"log-masking", >"JAVA"}]
-fluent-bit | [2] tcp.0: {"localTime"= "level"= "text"= "levelInt"= "loggerName"= "threadName"= "appName"= "appType"= >"2024-05-14T20:47:40.590Z", >"INFO", >"Completed initialization in 1 ms", >6, >"org.springframework.web.servlet.DispatcherServlet", >"http-nio-8080-exec-1", >"log-masking", >"JAVA"}]
-fluent-bit | [3] tcp.0: {"localTime"= "level"= "text"= "levelInt"= "loggerName"= "threadName"= "appName"= "appType"= >"2024-05-14T20:47:40.620Z", >"INFO", >"{"name":" <masked >"}", >6, >"ru.romanow.logging.web.LogSender", >"http-nio-8080-exec-1", >"log-masking", >"JAVA"}]
+```
 
+Вывод fluent-bit:
+
+```
+fluent-bit  | {"localTime"=>"2024-05-14T20:47:40.589Z", "level"=>"INFO", "text"=>"Initializing Servlet 'dispatcherServlet'", "levelInt"=>6, "loggerName"=>"org.springframework.web.servlet.DispatcherServlet", "threadName"=>"http-nio-8080-exec-1", "appName"=>"log-masking", "appType"=>"JAVA"}]
+fluent-bit  | {"localTime"=>"2024-05-14T20:47:40.590Z", "level"=>"INFO", "text"=>"Completed initialization in 1 ms", "levelInt"=>6, "loggerName"=>"org.springframework.web.servlet.DispatcherServlet", "threadName"=>"http-nio-8080-exec-1", "appName"=>"log-masking", "appType"=>"JAVA"}]
+fluent-bit  | {"localTime"=>"2024-05-14T20:47:40.620Z", "level"=>"INFO", "text"=>"{"name":"<masked>"}", "levelInt"=>6, "loggerName"=>"ru.romanow.logging.web.LogSender", "threadName"=>"http-nio-8080-exec-1", "appName"=>"log-masking", "appType"=>"JAVA"}]
 ```
