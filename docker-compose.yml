@@ -1,22 +1,5 @@
 version: "3"
 services:
-#  log-masking:
-#    build: .
-#    image: romanowalex/log-masking:v1.0
-#    container_name: log-masking
-#    environment:
-#      SPRING_PROFILES_ACTIVE: docker
-#    healthcheck:
-#      test: [ "CMD", "curl", "--silent", "--fail", "http://localhost:8080/manage/health" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 5
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      elastic:
-#        condition: service_healthy
-
   elastic:
     image: elasticsearch:8.12.2
     container_name: elastic
