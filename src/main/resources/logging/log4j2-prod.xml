@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="10">
+    <Properties>
+        <Property name="APP_NAME">log-masking</Property>
+        <Property name="APP_TYPE">JAVA</Property>
+    </Properties>
+    <Appenders>
+        <Socket name="Socket" host="127.0.0.1" port="5170" reconnectionDelayMillis="5000">
+            <JsonTemplateLayout eventTemplateUri="classpath:logging/layout.json">
+                <EventTemplateAdditionalField key="appName" value="${APP_NAME}"/>
+                <EventTemplateAdditionalField key="appType" value="${APP_TYPE}"/>
+            </JsonTemplateLayout>
+        </Socket>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="%mask{%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n}"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Socket"/>
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>

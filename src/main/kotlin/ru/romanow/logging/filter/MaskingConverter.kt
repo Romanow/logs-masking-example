@@ -17,15 +17,15 @@ class MaskingConverter private constructor(options: Array<String>) : LogEventPat
         patternLayout = createPatternLayout(options)
     }
 
-    private fun createPatternLayout(options: Array<String>): PatternLayout {
-        return PatternLayout.newBuilder().withPattern(options[0]).build()
-    }
-
     override fun format(event: LogEvent, toAppendTo: StringBuilder) {
         val formattedMessage = patternLayout.toSerializable(event)
         val maskedMessage = maskSensitiveValues(formattedMessage)
         toAppendTo.setLength(0)
         toAppendTo.append(maskedMessage)
+    }
+
+    private fun createPatternLayout(options: Array<String>): PatternLayout {
+        return PatternLayout.newBuilder().withPattern(options[0]).build()
     }
 
     private fun maskSensitiveValues(message: String): String {

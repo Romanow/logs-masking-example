@@ -49,7 +49,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-log4j2"
 
-    implementation "com.vlkan.log4j2:log4j2-logstash-layout:$logstashLayoutVersion"
+    implementation "org.apache.logging.log4j:log4j-layout-template-json"
     kapt "org.apache.logging.log4j:log4j-core"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"

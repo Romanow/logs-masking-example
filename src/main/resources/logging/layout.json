@@ -1,0 +1,56 @@
+{
+  "localTime": {
+    "$resolver": "timestamp",
+    "pattern": {
+      "format": "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+      "timeZone": "UTC"
+    }
+  },
+  "level": {
+    "$resolver": "level",
+    "field": "name"
+  },
+  "text": {
+    "$resolver": "pattern",
+    "pattern": "%mask{%m}"
+  },
+  "stack": {
+    "$resolver": "exception",
+    "field": "stackTrace",
+    "stackTrace": {
+      "stringified": true
+    }
+  },
+  "levelInt": {
+    "$resolver": "level",
+    "field": "severity",
+    "severity": {
+      "field": "code"
+    }
+  },
+  "loggerName": {
+    "$resolver": "logger",
+    "field": "name"
+  },
+  "threadName": {
+    "$resolver": "thread",
+    "field": "name"
+  },
+  "callerClass": {
+    "$resolver": "source",
+    "field": "className"
+  },
+  "callerMethod": {
+    "$resolver": "source",
+    "field": "methodName"
+  },
+  "callerLine": {
+    "$resolver": "source",
+    "field": "lineNumber"
+  },
+  "mdc": {
+    "$resolver": "mdc",
+    "flatten": true,
+    "stringified": true
+  }
+}
