@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="10">
+    <Properties>
+        <Property name="APP_NAME">log-masking</Property>
+        <Property name="APP_TYPE">JAVA</Property>
+        <Property name="LOG_EXCEPTION_CONVERSION_WORD">%xwEx</Property>
+        <Property name="LOG_LEVEL_PATTERN">%5p</Property>
+        <Property name="LOG_DATEFORMAT_PATTERN">yyyy-MM-dd'T'HH:mm:ss.SSSXXX</Property>
+        <Property name="CONSOLE_LOG_PATTERN">%clr{%d{${sys:LOG_DATEFORMAT_PATTERN}}}{faint} %clr{${sys:LOG_LEVEL_PATTERN}} %clr{%pid}{magenta} %clr{---}{faint} %clr{${sys:LOGGED_APPLICATION_NAME:-}[%15.15t]}{faint} %clr{${sys:LOG_CORRELATION_PATTERN:-}}{faint}%clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
+    </Properties>
+    <Appenders>
+        <Socket name="Socket" host="127.0.0.1" port="5170" reconnectionDelayMillis="5000">
+            <LogstashLayout prettyPrintEnabled="false"
+                            stackTraceEnabled="true"
+                            locationInfoEnabled="true"
+                            emptyPropertyExclusionEnabled="true"
+                            mdcKeyPattern="(?!agrType|traceId|spanId|parentSpanId|userId|logicTime|extEventId).+"
+                            timeZoneId="UTC"
+                            dateTimeFormatPattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+                            maxByteCount="1000000">
+                <EventTemplate>
+                    {
+                        "appName": "${APP_NAME}",
+                        "appType": "${APP_TYPE}",
+                        "localTime": "${json:timestamp}",
+                        "level": "${json:level}",
+                        "text": "${json:message}",
+                        "stack": "${json:exception:stackTrace:text}",
+                        "levelInt": "${json:level:severity:code}",
+                        "loggerName": "${json:logger:name}",
+                        "threadName": "${json:thread:name}",
+                        "callerClass": "${json:source:className}",
+                        "callerMethod": "${json:source:methodName}",
+                        "callerLine": "${json:source:lineNumber}",
+                        "mdc": "${json:mdc}"
+                    }
+                </EventTemplate>
+            </LogstashLayout>
+        </Socket>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${sys:CONSOLE_LOG_PATTERN}" charset="${sys:CONSOLE_LOG_CHARSET}"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Socket"/>
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>

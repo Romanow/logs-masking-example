@@ -1,0 +1,17 @@
+.idea/
+.gradle/
+out/
+build/
+.DS_Store
+
+*.iml
+*.iws
+*.ipr
+
+.terraform/
+.terragrunt-cache/
+*.tfplan
+*.tfstate
+*.tfstate.*
+*.lock.hcl
+*.auto.tfvars
