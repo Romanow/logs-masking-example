@@ -6,43 +6,55 @@ import org.apache.logging.log4j.core.layout.PatternLayout
 import org.apache.logging.log4j.core.layout.PatternLayout.newBuilder
 import org.apache.logging.log4j.core.pattern.ConverterKeys
 import org.apache.logging.log4j.core.pattern.LogEventPatternConverter
-import java.util.regex.Pattern
+import org.springframework.core.io.ClassPathResource
+import org.yaml.snakeyaml.Yaml
+import ru.romanow.logging.filter.rules.EmailRuleProcessor
+import ru.romanow.logging.filter.rules.FullNameRuleProcessor
+import ru.romanow.logging.filter.rules.NameRuleProcessor
+import ru.romanow.logging.filter.rules.RuleProcessor
+import ru.romanow.logging.filter.rules.TextRuleProcessor
+import ru.romanow.logging.properties.MaskingProperties
+import ru.romanow.logging.properties.RuleType.EMAIL
+import ru.romanow.logging.properties.RuleType.FULL_NAME
+import ru.romanow.logging.properties.RuleType.NAME
+import ru.romanow.logging.properties.RuleType.TEXT
 
 @ConverterKeys("mask")
 @Plugin(name = "MaskingConverter", category = "Converter")
 class MaskingConverter private constructor(options: Array<String>) : LogEventPatternConverter("mask", "mask") {
 
     private val patternLayout: PatternLayout
+    private var rules = mutableListOf<RuleProcessor>()
 
     init {
         patternLayout = newBuilder()
             .withPattern(options[0])
             .build()
+
+        val file = ClassPathResource("logging/masking.yml")
+        val properties = Yaml().loadAs(file.inputStream, MaskingProperties::class.java)
+
+        for ((type, field, regex) in properties.masking!!) {
+            val ruleProcessor = when (type!!) {
+                TEXT -> TextRuleProcessor(field, regex)
+                EMAIL -> EmailRuleProcessor(field)
+                NAME -> NameRuleProcessor(field)
+                FULL_NAME -> FullNameRuleProcessor(field)
+            }
+            rules.add(ruleProcessor)
+        }
     }
 
     override fun format(event: LogEvent, toAppendTo: StringBuilder) {
-        val formattedMessage = patternLayout.toSerializable(event)
-        val maskedMessage = maskSensitiveValues(formattedMessage)
-        toAppendTo.setLength(0)
-        toAppendTo.append(maskedMessage)
-    }
-
-    private fun maskSensitiveValues(message: String): String {
-        return findMatchesAndMask(NAME_PATTERN, NAME_MASK_PATTERN, message)
-    }
-
-    private fun findMatchesAndMask(pattern: Pattern, mask: String, message: String): String {
-        var result = message
-        val matcher = pattern.matcher(message)
-        while (matcher.find()) {
-            result = result.replaceRange(matcher.start()..<matcher.end(), mask)
+        var message = patternLayout.toSerializable(event)
+        for (rule in rules) {
+            message = rule.apply(message)
         }
-        return result
+        toAppendTo.setLength(0)
+        toAppendTo.append(message)
     }
 
     companion object {
-        private const val NAME_MASK_PATTERN = "\"name\":\"<masked>\""
-        private val NAME_PATTERN = Pattern.compile("\"name\"\\s*:\\s*\".+\"")
 
         @JvmStatic
         fun newInstance(options: Array<String>): MaskingConverter = MaskingConverter(options)

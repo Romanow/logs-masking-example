@@ -59,13 +59,13 @@ fluent-bit  | {"localTime"=>"2024-05-14T20:47:40.620Z", "level"=>"INFO", "text"=
 ```yaml
 application:
   masking:
-    - name: $.fullName
+    - field: fullName
       type: FULL_NAME
-    - name: lastName
+    - field: lastName
       type: LAST_NAME
-    - name: email
+    - field: email
       type: EMAIL
-    - name: JWT
+    - field: JWT
       type: TEXT
     - regex: (Authorization|JWT):\s.+\r?\n
       type: TEXT

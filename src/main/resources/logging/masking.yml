@@ -1,0 +1,12 @@
+---
+masking:
+  - field: 'fullName'
+    type: FULL_NAME
+  - field: 'lastName'
+    type: NAME
+  - field: 'email'
+    type: EMAIL
+  - field: 'JWT'
+    type: TEXT
+  - regex: 'Authorization\s*:\s*(\S+)'
+    type: TEXT
