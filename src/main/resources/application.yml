@@ -17,3 +17,16 @@ management:
   health.diskspace.enabled: false
   endpoint.health.show-details: always
   info.git.mode: simple
+
+application:
+  masking:
+    - name: '$.fullName'
+      type: FULL_NAME
+    - name: 'lastName'
+      type: NAME
+    - name: 'email'
+      type: EMAIL
+    - name: 'JWT'
+      type: TEXT
+    - regex: '(Authorization|JWT):\s.+\r?\n'
+      type: TEXT

@@ -3,6 +3,7 @@ package ru.romanow.logging.filter
 import org.apache.logging.log4j.core.LogEvent
 import org.apache.logging.log4j.core.config.plugins.Plugin
 import org.apache.logging.log4j.core.layout.PatternLayout
+import org.apache.logging.log4j.core.layout.PatternLayout.newBuilder
 import org.apache.logging.log4j.core.pattern.ConverterKeys
 import org.apache.logging.log4j.core.pattern.LogEventPatternConverter
 import java.util.regex.Pattern
@@ -14,7 +15,9 @@ class MaskingConverter private constructor(options: Array<String>) : LogEventPat
     private val patternLayout: PatternLayout
 
     init {
-        patternLayout = createPatternLayout(options)
+        patternLayout = newBuilder()
+            .withPattern(options[0])
+            .build()
     }
 
     override fun format(event: LogEvent, toAppendTo: StringBuilder) {
@@ -22,10 +25,6 @@ class MaskingConverter private constructor(options: Array<String>) : LogEventPat
         val maskedMessage = maskSensitiveValues(formattedMessage)
         toAppendTo.setLength(0)
         toAppendTo.append(maskedMessage)
-    }
-
-    private fun createPatternLayout(options: Array<String>): PatternLayout {
-        return PatternLayout.newBuilder().withPattern(options[0]).build()
     }
 
     private fun maskSensitiveValues(message: String): String {

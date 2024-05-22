@@ -42,3 +42,31 @@ fluent-bit  | {"localTime"=>"2024-05-14T20:47:40.589Z", "level"=>"INFO", "text"=
 fluent-bit  | {"localTime"=>"2024-05-14T20:47:40.590Z", "level"=>"INFO", "text"=>"Completed initialization in 1 ms", "levelInt"=>6, "loggerName"=>"org.springframework.web.servlet.DispatcherServlet", "threadName"=>"http-nio-8080-exec-1", "appName"=>"log-masking", "appType"=>"JAVA"}]
 fluent-bit  | {"localTime"=>"2024-05-14T20:47:40.620Z", "level"=>"INFO", "text"=>"{"name":"<masked>"}", "levelInt"=>6, "loggerName"=>"ru.romanow.logging.web.LogSender", "threadName"=>"http-nio-8080-exec-1", "appName"=>"log-masking", "appType"=>"JAVA"}]
 ```
+
+Тип поля:
+
+* email –> a******@mail.ru
+* firstName –> не маскируется
+* lastName, middleName –> if (length > 7) Ab*****c else A*****
+* text –> в зависимости от длины:
+    * 1..4 -> 1234 -> 1***
+    * 5..9 -> 123456789 -> 1******89 (length * 60%)
+    * 10..15 -> 12345678901 -> 12******01 (length * 60%)
+    * 16+ -> 1234567890123456 -> 123*********3456 (length * 60%)
+
+Конфигурация:
+
+```yaml
+application:
+  masking:
+    - name: $.fullName
+      type: FULL_NAME
+    - name: lastName
+      type: LAST_NAME
+    - name: email
+      type: EMAIL
+    - name: JWT
+      type: TEXT
+    - regex: (Authorization|JWT):\s.+\r?\n
+      type: TEXT
+ ```
