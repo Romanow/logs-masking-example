@@ -12,7 +12,6 @@ plugins {
 ext {
     springBootVersion = "2.5.6"
     logstashLayoutVersion = "1.0.5"
-    logCaptorVersion = "2.9.2"
 }
 
 idea {
@@ -41,10 +40,6 @@ dependencyManagement {
 configurations {
     implementation {
         exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
-    }
-    testImplementation {
-        exclude group: "org.apache.logging.log4j", module: "log4j-slf4j-impl"
-        exclude group: "org.apache.logging.log4j", module: "log4j-slf4j2-impl"
     }
 }
 
