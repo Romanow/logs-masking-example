@@ -20,7 +20,7 @@
 используется `JsonTemplateLayout` (шаблон [layout.json](src/main/resources/logging/layout.json), для маскирования
 используется pattern resolver как `%mask{%m}`.
 
-Локальное тестирование:
+## Тестирование
 
 ```shell
 $ docker compose up -d
@@ -43,16 +43,19 @@ fluent-bit  | {"localTime"=>"2024-05-14T20:47:40.590Z", "level"=>"INFO", "text"=
 fluent-bit  | {"localTime"=>"2024-05-14T20:47:40.620Z", "level"=>"INFO", "text"=>"{"name":"<masked>"}", "levelInt"=>6, "loggerName"=>"ru.romanow.logging.web.LogSender", "threadName"=>"http-nio-8080-exec-1", "appName"=>"log-masking", "appType"=>"JAVA"}]
 ```
 
+## Правила маскирования
+
 Тип поля:
 
-* email –> a******@mail.ru
-* firstName –> не маскируется
-* lastName, middleName –> if (length > 7) Ab*****c else A*****
-* text –> в зависимости от длины:
-    * 1..4 -> 1234 -> 1***
-    * 5..9 -> 123456789 -> 1******89 (length * 60%)
-    * 10..15 -> 12345678901 -> 12******01 (length * 60%)
-    * 16+ -> 1234567890123456 -> 123*********3456 (length * 60%)
+* `email` –> `romanowalex@mail.ru` -> `r**********@mail.ru`
+* `firstName` –> не маскируется
+* `lastName`, `middleName` –> if (name.length > 7) `Ab*****c` else `A*****`
+* `text` –> в зависимости от длины:
+    * 1 -> `*`
+    * 1..4 -> `1234` -> `1***`
+    * 5..9 -> `123456789` -> `1******89` (length * 60%)
+    * 10..15 -> `12345678901` -> `12*******01` (length * 60%)
+    * 16 + -> `12345678901234567` -> `123***********567` (length * 60%)
 
 Конфигурация:
 
@@ -67,6 +70,6 @@ application:
       type: EMAIL
     - field: JWT
       type: TEXT
-    - regex: (Authorization|JWT):\s.+\r?\n
+    - regex: Authorization\s*:\s*(\S+)
       type: TEXT
  ```
