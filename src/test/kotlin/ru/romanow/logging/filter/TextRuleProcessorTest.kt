@@ -21,8 +21,8 @@ class TextRuleProcessorTest {
 
     @Test
     fun testCustomRule() {
-        val processor = TextRuleProcessor(regex = "Authorization\\s*:\\s*(\\S+)".toRegex())
-        assertThat(processor.apply("Authorization : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"))
-            .isEqualTo("Authorization : eyJ**********************CI6IkpXVCJ9")
+        val processor = TextRuleProcessor(regex = "(?:JWT|Authorization)\\s*[:=]\\s*(.+)".toRegex())
+        assertThat(processor.apply("Authorization : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"))
+            .isEqualTo("Authorization : Bea**************************R5cCI6IkpXVCJ9")
     }
 }

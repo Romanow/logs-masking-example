@@ -12,7 +12,7 @@
             </JsonTemplateLayout>
         </Socket>
         <Console name="Console" target="SYSTEM_OUT" follow="true">
-            <PatternLayout pattern="%mask{%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n}"/>
+            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %mask{%msg}%n"/>
         </Console>
     </Appenders>
     <Loggers>

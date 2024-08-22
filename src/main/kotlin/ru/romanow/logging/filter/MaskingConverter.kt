@@ -1,36 +1,27 @@
 package ru.romanow.logging.filter
 
 import org.apache.logging.log4j.core.LogEvent
+import org.apache.logging.log4j.core.config.Configuration
 import org.apache.logging.log4j.core.config.plugins.Plugin
 import org.apache.logging.log4j.core.layout.PatternLayout
-import org.apache.logging.log4j.core.layout.PatternLayout.newBuilder
 import org.apache.logging.log4j.core.pattern.ConverterKeys
 import org.apache.logging.log4j.core.pattern.LogEventPatternConverter
+import org.apache.logging.log4j.core.pattern.PatternFormatter
 import org.springframework.core.io.ClassPathResource
 import org.yaml.snakeyaml.Yaml
-import ru.romanow.logging.filter.rules.EmailRuleProcessor
-import ru.romanow.logging.filter.rules.FullNameRuleProcessor
-import ru.romanow.logging.filter.rules.NameRuleProcessor
-import ru.romanow.logging.filter.rules.RuleProcessor
-import ru.romanow.logging.filter.rules.TextRuleProcessor
+import ru.romanow.logging.filter.rules.*
 import ru.romanow.logging.properties.MaskingProperties
-import ru.romanow.logging.properties.RuleType.EMAIL
-import ru.romanow.logging.properties.RuleType.FULL_NAME
-import ru.romanow.logging.properties.RuleType.NAME
-import ru.romanow.logging.properties.RuleType.TEXT
+import ru.romanow.logging.properties.RuleType.*
 
 @ConverterKeys("mask")
 @Plugin(name = "MaskingConverter", category = "Converter")
-class MaskingConverter private constructor(options: Array<String>) : LogEventPatternConverter("mask", "mask") {
+class MaskingConverter private constructor(
+    private val formatters: MutableList<PatternFormatter>
+) : LogEventPatternConverter("mask", "mask") {
 
-    private val patternLayout: PatternLayout
     private var rules = mutableListOf<RuleProcessor>()
 
     init {
-        patternLayout = newBuilder()
-            .withPattern(options[0])
-            .build()
-
         val file = ClassPathResource("logging/masking.yml")
         val properties = Yaml().loadAs(file.inputStream, MaskingProperties::class.java)
 
@@ -46,17 +37,29 @@ class MaskingConverter private constructor(options: Array<String>) : LogEventPat
     }
 
     override fun format(event: LogEvent, toAppendTo: StringBuilder) {
-        var message = patternLayout.toSerializable(event)
-        for (rule in rules) {
-            message = rule.apply(message)
+        val buffer = java.lang.StringBuilder()
+        for (formatter in formatters) {
+            formatter.format(event, buffer)
         }
-        toAppendTo.setLength(0)
+        val message = mask(buffer.toString())
         toAppendTo.append(message)
+    }
+
+    private fun mask(message: String): String {
+        var result = message
+        for (rule in rules) {
+            result = rule.apply(result)
+        }
+        return result
     }
 
     companion object {
 
         @JvmStatic
-        fun newInstance(options: Array<String>): MaskingConverter = MaskingConverter(options)
+        fun newInstance(config: Configuration, options: Array<String>): MaskingConverter {
+            val parser = PatternLayout.createPatternParser(config)
+            val formatters = parser.parse(options[0])
+            return MaskingConverter(formatters)
+        }
     }
 }

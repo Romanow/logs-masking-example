@@ -8,5 +8,5 @@ masking:
     type: EMAIL
   - field: 'JWT'
     type: TEXT
-  - regex: 'Authorization\s*:\s*(\S+)'
+  - regex: '(?:JWT|Authorization)\s*(?::|=)\s*(.+)'
     type: TEXT
