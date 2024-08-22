@@ -29,7 +29,7 @@ $ ./gradlew bootRun --args='--spring.profiles.active=docker'
 
 $ curl http://localhost:8080/api/v1/send \
   -H 'Content-Type: application/json' \
-  -d '{"name": "Alex"}'
+  -d '{"lastName": "Alex"}'
 
 $ docker compose logs -f fluent-bit
 
@@ -40,7 +40,7 @@ $ docker compose logs -f fluent-bit
 ```
 fluent-bit  | {"localTime"=>"2024-05-14T20:47:40.589Z", "level"=>"INFO", "text"=>"Initializing Servlet 'dispatcherServlet'", "levelInt"=>6, "loggerName"=>"org.springframework.web.servlet.DispatcherServlet", "threadName"=>"http-nio-8080-exec-1", "appName"=>"log-masking", "appType"=>"JAVA"}]
 fluent-bit  | {"localTime"=>"2024-05-14T20:47:40.590Z", "level"=>"INFO", "text"=>"Completed initialization in 1 ms", "levelInt"=>6, "loggerName"=>"org.springframework.web.servlet.DispatcherServlet", "threadName"=>"http-nio-8080-exec-1", "appName"=>"log-masking", "appType"=>"JAVA"}]
-fluent-bit  | {"localTime"=>"2024-05-14T20:47:40.620Z", "level"=>"INFO", "text"=>"{"name":"<masked>"}", "levelInt"=>6, "loggerName"=>"ru.romanow.logging.web.LogSender", "threadName"=>"http-nio-8080-exec-1", "appName"=>"log-masking", "appType"=>"JAVA"}]
+fluent-bit  | {"localTime"=>"2024-05-14T20:47:40.620Z", "level"=>"INFO", "text"=>"{"lastName":"<masked>"}", "levelInt"=>6, "loggerName"=>"ru.romanow.logging.web.LogSender", "threadName"=>"http-nio-8080-exec-1", "appName"=>"log-masking", "appType"=>"JAVA"}]
 ```
 
 ## Правила маскирования
