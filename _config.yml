@@ -7,8 +7,6 @@ author:
 show_downloads: false
 remote_theme: jekyll/minima
 header_pages: ['']
-exclude:
-  - report/*
 
 minima:
   skin: classic
