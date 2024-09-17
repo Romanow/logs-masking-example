@@ -4,6 +4,26 @@
 
 # Masking logs
 
+## Подключение
+
+### Maven
+
+```xml
+<dependency>
+  <groupId>ru.romanow.logging</groupId>
+  <artifactId>log-masking-lib</artifactId>
+  <version>${log-masking-lib.version}</version>
+</dependency>
+```
+
+### Gradle
+
+```groovy
+testImplementation "ru.romanow.logging:log-masking-lib:$logMaskingVersion"
+```
+
+## Реализация
+
 Для маскирования логов используется
 плагин [`MaskingConverter`](log-masking-lib/src/main/kotlin/ru/romanow/logging/filter/MaskingConverter.kt).
 

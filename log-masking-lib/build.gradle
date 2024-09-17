@@ -52,7 +52,7 @@ publishing {
         maven(MavenPublication) {
             pom {
                 name = "log-masking-lib"
-                description = "Page Object pattern for Playwright framework"
+                description = "Masking logs implementation lib"
                 licenses {
                     license {
                         name = "The MIT License"
