@@ -22,6 +22,9 @@ jobs:
 
       - name: Build
         run: ./gradlew log-masking-lib:publish
+        env:
+          GITHUB_USER: ${{ secrets.GITHUB_USER }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create release
         uses: softprops/action-gh-release@v2
