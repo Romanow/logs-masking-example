@@ -50,6 +50,7 @@ check.dependsOn jacocoTestReport
 publishing {
     publications {
         maven(MavenPublication) {
+            from components.java
             pom {
                 name = "log-masking-lib"
                 description = "Masking logs implementation lib"
