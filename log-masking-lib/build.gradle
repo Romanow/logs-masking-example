@@ -1,0 +1,90 @@
+plugins {
+    id "idea"
+    id "jacoco"
+    id "maven-publish"
+    id "org.jetbrains.kotlin.jvm" version "1.9.22"
+}
+
+ext {
+    kotlinVersion = "1.9.22"
+    snakeYamlVersion = "2.3"
+    log4j2Version = "2.24.0"
+    junitVersion = "5.11.0"
+    assertjVersion = "3.26.3"
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+[compileKotlin, compileTestKotlin]*.kotlinOptions*.jvmTarget = "17"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    api "org.apache.logging.log4j:log4j-layout-template-json:$log4j2Version"
+    api "org.yaml:snakeyaml:$snakeYamlVersion"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        html.required = false
+    }
+}
+
+check.dependsOn jacocoTestReport
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            pom {
+                name = "log-masking-lib"
+                description = "Page Object pattern for Playwright framework"
+                licenses {
+                    license {
+                        name = "The MIT License"
+                        url = "https://opensource.org/license/mit"
+                    }
+                }
+                developers {
+                    developer {
+                        name = "Romanov Alex"
+                        email = "romanowalex@mail.ru"
+                    }
+                }
+                scm {
+                    url = "https://github.com/Romanow/logs-masking-example/"
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = uri("https://maven.pkg.github.com/Romanow/logs-masking-example")
+            credentials {
+                username = System.getenv("GITHUB_USER")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+    }
+}

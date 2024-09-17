@@ -1,7 +1,8 @@
-# Masking logs
-
 [![Build project](https://github.com/Romanow/logs-masking-example/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Romanow/logs-masking-example/actions/workflows/build.yml)
+[![codecov](https://codecov.io/gh/Romanow/logs-masking-example/branch/master/graph/badge.svg?token=Cckw6pHLh7)](https://codecov.io/gh/Romanow/logs-masking-example)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+
+# Masking logs
 
 Для маскирования логов используется
 плагин [`MaskingConverter`](src/main/kotlin/ru/romanow/logging/filter/MaskingConverter.kt).
@@ -61,15 +62,15 @@ fluent-bit  | {"localTime"=>"2024-05-14T20:47:40.620Z", "level"=>"INFO", "text"=
 
 ```yaml
 application:
-  masking:
-    - field: fullName
-      type: FULL_NAME
-    - field: lastName
-      type: LAST_NAME
-    - field: email
-      type: EMAIL
-    - field: JWT
-      type: TEXT
-    - regex: Authorization\s*:\s*(\S+)
-      type: TEXT
+    masking:
+        -   field: fullName
+            type: FULL_NAME
+        -   field: lastName
+            type: LAST_NAME
+        -   field: email
+            type: EMAIL
+        -   field: JWT
+            type: TEXT
+        -   regex: Authorization\s*:\s*(\S+)
+            type: TEXT
  ```

@@ -7,7 +7,6 @@ import org.apache.logging.log4j.core.layout.PatternLayout
 import org.apache.logging.log4j.core.pattern.ConverterKeys
 import org.apache.logging.log4j.core.pattern.LogEventPatternConverter
 import org.apache.logging.log4j.core.pattern.PatternFormatter
-import org.springframework.core.io.ClassPathResource
 import org.yaml.snakeyaml.Yaml
 import ru.romanow.logging.filter.rules.*
 import ru.romanow.logging.properties.MaskingProperties
@@ -22,8 +21,8 @@ class MaskingConverter private constructor(
     private var rules = mutableListOf<RuleProcessor>()
 
     init {
-        val file = ClassPathResource("logging/masking.yml")
-        val properties = Yaml().loadAs(file.inputStream, MaskingProperties::class.java)
+        val stream = object {}.javaClass.classLoader.getResourceAsStream("logging/masking.yml")
+        val properties = Yaml().loadAs(stream, MaskingProperties::class.java)
 
         for ((type, field, regex) in properties.masking!!) {
             val ruleProcessor = when (type!!) {

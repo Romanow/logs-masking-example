@@ -1,1 +1,3 @@
 rootProject.name = "logs-masking-example"
+
+include "log-masking-lib"

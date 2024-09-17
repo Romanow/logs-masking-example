@@ -1,0 +1,27 @@
+---
+name: Publish
+on:
+  push:
+    tags:
+      - "v*.*.*"
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "corretto"
+          java-version: "17"
+          cache: "gradle"
+
+      - name: Build
+        run: ./gradlew log-masking-lib:publish
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
