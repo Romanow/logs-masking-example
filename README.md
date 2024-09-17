@@ -10,6 +10,16 @@
 Для его подключения используется annotation processor `org.apache.logging.log4j:log4j-core`, который собирает плагины
 в [`$buildDir/tmp/kapt3/classes/main/META-INF/org/apache/logging/log4j/core/config/plugins/Log4j2Plugins.dat`](build/tmp/kapt3/classes/main/META-INF/org/apache/logging/log4j/core/config/plugins/Log4j2Plugins.dat).
 
+В шаблоне этот конвертер вызывается как `%mask{ %msg }`:
+
+```xml
+
+<PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %mask{ %msg }%n"/>
+```
+
+Отправка в ELK выполняется в формате JSON через fluent-bit (по адресу localhost:5170), для сборки сообщения
+используется `JsonTemplateLayout` (шаблон [layout.json](log-masking-lib/src/main/resources/logging/layout.json), для маскирования
+используется pattern resolver как `%mask{ %msg }`.
 
 
 ## Тестирование
