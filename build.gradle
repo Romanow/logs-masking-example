@@ -11,7 +11,7 @@ plugins {
 }
 
 ext {
-    springBootVersion = "3.3.3"
+    springBootVersion = "3.3.4"
     logstashLayoutVersion = "1.0.5"
 }
 
