@@ -10,7 +10,7 @@ plugins {
 
 ext {
     kotlinVersion = "1.9.25"
-    snakeYamlVersion = "2.3"
+    snakeYamlVersion = "2.5"
     log4j2Version = "2.24.0"
     junitVersion = "5.11.0"
     assertjVersion = "3.26.3"
