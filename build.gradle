@@ -13,7 +13,7 @@ ext {
     snakeYamlVersion = "2.3"
     log4j2Version = "2.24.0"
     junitVersion = "5.11.0"
-    assertjVersion = "3.26.3"
+    assertjVersion = "3.27.6"
 }
 
 idea {
